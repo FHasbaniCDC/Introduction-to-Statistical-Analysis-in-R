@@ -9,6 +9,7 @@
 pwi <- expand.grid(rep(list(0:9), 3))
 pwi
 
+#see the formulas from the lecture
 10^3
 # [1] 1000
 nrow(pwi)
@@ -26,7 +27,7 @@ cwop
 ncol(cwop)
 ## [1] 13983816
 
-#Written in Learning Machines, June 2019
+#Written in Learning Machines, June 2019, lines 32--54
 #permutations (of all elements) without repetitions - there is no readily available function in Base R. 
 #You can write our own:
 perm <- function(v) {
@@ -54,24 +55,22 @@ factorial(4)
 nrow(p_wo)
 
 
-#USING gtools package
+#Example using gtools package, the permutation function
 install.packages('gtools')
 #load library
 library(gtools)
-#urn with 3 balls
-x <- c('A',"C","G","T")
-#pick 2 balls from the urn with replacement
+
+#Example
+#study with 4 letters
+x <- c("A","C","G","T")
+#pick 2 letters from the results with replacement
 #get all permutations
 permutations(n=4,r=11,v=x,repeats.allowed=T)
 #number of permutations
+head(permutations(n=4,r=11,v=x,repeats.allowed=T))
 nrow(permutations(n=4,r=11,v=x,repeats.allowed=T))
 
-x <- c('yellow', 'green', 'black')
-#pick 2 balls from the urn with replacement
-#get all permutations
-head(permutations(n=3,r=2,v=x))
-nrow(permutations(n=3,r=2,v=x))
-
+#Permutation without replacement function
 perm_without_replacement <- function(n, r){
   return(factorial(n)/factorial(n - r))
 }
@@ -87,12 +86,24 @@ comb_with_replacement <- function(n, r){
   return( factorial(n + r - 1) / (factorial(r) * factorial(n - 1)) )
 }
 #have 3 elements, choosing 3
-comb_with_replacement(24,4)
+comb_with_replacement(4,2) #that is n-1=3 and r-1=2
 #[1] 10
 
-m <- matrix(1:4, 2)
-m
-margin.table(m, 1)
-margin.table(m, 2)
-prop.table(m, 1)
+#Example
+#three marbles in an urn
+x <- c("red", "blue","black")
+#pick 2 balls from the urn with replacement
+#get all permutations
+permutations(n=3,r=2,v=x)
+#     [,1]    [,2]   
+#[1,] "black" "blue" 
+#[2,] "black" "red"  
+#[3,] "blue"  "black"
+#[4,] "blue"  "red"  
+#[5,] "red"   "black"
+#[6,] "red"   "blue"
+
+#number of permutations
+nrow(permutations(n=3,r=2,v=x))
+#[1] 6
 

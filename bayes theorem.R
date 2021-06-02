@@ -1,4 +1,11 @@
-Consider the dreaded disease Dipsidoodleitis. There are actually two forms of the disease, Type I and Type II, with the later being more severe. Dipsidoodleitis is detected by a blood test. Values for people without dipsidoodleitis are normally distributed, M=70, sd=10. Values for people with Type I and Type II are distributed with M=80, sd=14 and M=110, sd=20, respectively. If a patient has a value of 90, what are the probabilities that she is dipsidoodleitis free, has the Type I version, or has the Type II version.
+#Consider the dreaded disease Dipsidoodleitis. 
+#There are actually two forms of the disease, Type I and Type II, 
+#with the later being more severe. Dipsidoodleitis is detected by
+#a blood test. Values for people without dipsidoodleitis are 
+#normally distributed, M=70, sd=10. Values for people with Type I
+#and Type II are distributed with M=80, sd=14 and M=110, sd=20, respectively. 
+#If a patient has a value of 90, what are the probabilities that she is dipsidoodleitis free, 
+#has the Type I version, or has the Type II version.
 
 y=seq(30,170,.1)
 f1=dnorm(y,70,10)

@@ -28,7 +28,7 @@ sample (c("drug","placebo"), size=6, replace=T, prob=c(.75,.25))
 #randoming sampling rows in dataframe
 # r sample dataframe; selecting a random subset in r
 # df is a data frame; pick 5 rows
-df[sample(nrow(df), 5), ]
+#df[sample(nrow(df), 5), ]
 
 #using the sample function in r to select a random subset of 5 rows from a larger data frame.
 pd[sample(nrow(pd), 5), ] #from Parkinson data set

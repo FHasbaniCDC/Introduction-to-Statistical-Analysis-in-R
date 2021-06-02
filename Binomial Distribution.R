@@ -46,6 +46,29 @@ results <- rbinom(500, size=75, prob=.3)
 #find mean number of successes in the 100 experiments (compared to expected
 #mean of 30)
 mean(results)
-# [1] 22.6
+# [1] 23
 
 #more random variables, the closer the mean number of successes is to the expected number of successes.
+#find the probability of 4 or fewer successes during 10 trials where the
+#probability of success on each trial is 0.6
+
+
+1-pbinom(3,size=10,prob=.6)
+pbinom(3,size=10,prob=.6) 
+
+dbinom(3,size = 10,prob=.6) +#.0425
+dbinom(2,size = 10,prob=.6) +#.0106
+dbinom(1,size = 10,prob=.6) #.00157
+
+#poisson
+dpois #density
+ppois #distribution
+
+#1
+pnorm(66,mean=65, sd=7)
+
+#2
+dbinom(8,size=10,prob=.6)
+
+pbinom(4,size=10,prob=.6) #95, 4, 3, 2, 1
+#dbinom(3-1,size=10,prob=.6) 5 #3, 2, 1

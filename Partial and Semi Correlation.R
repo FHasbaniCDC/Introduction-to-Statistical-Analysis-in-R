@@ -26,7 +26,6 @@ pcor(df)
 #The function pcor.test can calculate the pairwise partial correlations between two variables
 pcor.test(df$currentGrade,df$hours,df[,c("examScore")])
 pcor.test(df[,1],df[,2],df[,3])
-pcor.test(df[,1],df[,2],df[,3])
 pcor.test(df[,1],df[,2],df[,-c(1:2)])
 
 #Partial correlation between hours studied and final exam score:

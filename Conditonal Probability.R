@@ -47,7 +47,7 @@ Conditional_Probability
 #sample
 flu <- sample(c('No','Yes'), size=100000, replace=TRUE, prob=c(0.99,0.01))
 test <- rep(NA, 100000) # create a dummy variable first
-
+#joint prob
 test[flu=='No'] <- sample(c('Neg','Pos'), size=sum(flu=='No'), replace=TRUE, prob=c(0.95,0.05))
 test[flu=='Yes'] <- sample(c('Neg','Pos'), size=sum(flu=='Yes'), replace=TRUE,prob=c(0.1, 0.9))
 

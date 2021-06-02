@@ -71,7 +71,7 @@ head(permutations(n=4,r=11,v=x,repeats.allowed=T))
 nrow(permutations(n=4,r=11,v=x,repeats.allowed=T))
 
 #Permutation without replacement function
-perm_without_replacement <- function(n, r){
+perm_without_replacement <- function(n,r){
   return(factorial(n)/factorial(n - r))
 }
 perm_without_replacement(16,16)

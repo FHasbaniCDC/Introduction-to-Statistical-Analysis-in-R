@@ -1,0 +1,185 @@
+---
+title: "More Descriptive Statistics"
+author: "Bevera Solutions"
+date: "1/19/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r}
+
+#set working directory 
+setwd("C:\\Users\\redbe\\OneDrive\\Documents\\Data")
+
+#import datasets
+chi<-read.csv(file.choose())
+
+pd<-read.csv("Parkinson.csv")
+View(pd)
+
+derm <-read.csv("dermatology.csv")
+View(derm)
+
+tobacco <- read.csv("tobacco.csv")
+View(tobacco)
+```
+
+#f you need more descriptive statistics, use stat.desc()
+```{r}
+#install.packages("pastecs")
+library(pastecs)
+stat.desc(derm)
+```
+
+#Mosaic plots 
+#A mosaic plot allows to visualize a contingency table of two qualitative variables:
+```{r}
+mosaicplot(table(derm$class, derm$inflammatory_monoluclear),
+           color = TRUE,
+           xlab = "Class", # label for x-axis
+           ylab = "Mono" # label for y-axis
+)
+```
+# a mosaic plot can also be done via the mosaic() function from the "vcd" package.
+```{r}
+library(vcd)
+mosaic(~ class + inflammatory_monoluclear,
+       data = derm,
+       direction = c("v", "h")
+)
+```
+
+#Barplots can only be done on qualitative variables
+#draw a barplot of the relative frequencies instead of the frequencies by adding prop.table()
+```{r}
+
+barplot(prop.table(table(derm$class)))
+```
+#By groups
+#For some statistical tests, the normality assumption is required in all groups. One solution is to draw a QQ-plot for each group by manually splitting the dataset into different groups and then draw a QQ-plot for each subset of the data (with the methods shown above). Another (easier) solution is to draw a QQ-plot for each group automatically with the argument groups = in the function qqPlot() from the {car} package
+```{r}
+library(car)
+qqPlot(derm$class, groups = derm$itching)
+
+# qqplot in ggplot2
+library(ggplot2)
+qplot(
+  sample = class, data = derm,
+  col = as.factor(itching),
+  xlab="Itching",
+  ylab="class"
+)
+```
+#advanced descriptive stats
+#more functions and packages to perform more advanced descriptive statistics in R
+```{r}
+#install.packages("summarytool")
+library(summarytools)
+
+#freq() for frequencies tables
+#ctable() for cross-tabulations
+#descr() for descriptive statistics
+#dfSummary() for dataframe summaries
+
+#A combination of these 4 functions is usually more than enough for most descriptive analysis.
+
+freq(derm$class)
+
+#if you need information on missing values, add report.nas = FALSE
+freq(derm$class,
+     report.nas = F # remove NA information
+)
+
+freq(derm$class,
+     report.nas = FALSE, # remove NA information
+     totals = FALSE, # remove totals
+     cumul = FALSE, # remove cumuls
+     headings = FALSE # remove headings
+)
+```
+
+#produces cross-tabulations (also known as contingency tables) for pairs of categorical variables
+```{r}
+ctable(
+  x = derm$class,
+  y = derm$itching
+)
+#To add total proportions, add the argument prop = "t" 
+#To remove proportions altogether, add the argument prop = "n"
+#provides counts
+ctable(
+  x = derm$class,
+  y = derm$itching,
+  prop = "n", # remove proportions
+  totals = FALSE, # remove totals
+  headings = FALSE # remove headings
+)
+
+#The above script is equivalent to table(derm$class, derm$itching) and xtabs(~ derm$class + derm$itching)
+
+#To display results of the Chi-square test of independence, add the chisq = TRUE argument
+ctable(
+  x = derm$class,
+  y = derm$itching,
+  chisq = TRUE, # display results of Chi-square test of independence
+  headings = FALSE # remove headings
+)
+#if the p-value is close to 0 we reject the null hypothesis of independence between the two variables.This indicates that the variables are dependent and that there is a significant relationship between the two variables.
+```
+
+#Create a contingency table for each level of a third categorical variable with to the combination of functions, stby() and ctable().
+```{r}
+stby(list(
+  x = tobacco$smoker, # smoker and diseased
+  y = tobacco$diseased
+),
+INDICES = tobacco$gender, # for each gender
+FUN = ctable # ctable for cross-tabulation
+)
+```
+#The descr() function produces descriptive (univariate) statistics with common central tendency statistics and measures of dispersion.
+#The function accepts single vectors as well as data frames. If a data frame is provided, all non-numerical columns are ignored so you do not have to remove them yourself before running the function.
+```{r}
+descr(tobacco,
+      headings = FALSE, # remove headings
+      stats = "common" # most common descriptive statistics
+)
+```
+
+#Use stats = c("mean", "sd"), stats = "fivenum" or stats = "common"
+#If you have a large number of variables, add the transpose = TRUE argument for a better display.
+
+#To compute these descriptive statistics by group
+```{r}
+stby(
+  data = tobacco,
+  INDICES = tobacco$smoker, # by Smoker
+  FUN = descr, # descriptive statistics
+  stats = "common" # most common descr. stats
+)
+```
+#Data frame summaries
+#The dfSummary() function generates a summary table with statistics, frequencies and graphs for all variables in a dataset.
+```{r}
+dfSummary(tobacco)
+```
+#The describeBy() function from the {psych} package allows to report several summary statistics (i.e., number of valid cases, mean, standard deviation, median, trimmed mean, mad: median absolute deviation (from the median), minimum, maximum, range, skewness and kurtosis) by a grouping variable.
+```{r}
+library(psych)
+describeBy(
+  derm,
+  derm$class # grouping variable
+)
+```
+#The aggregate() function allows to split the data into subsets and then to compute summary statistics for each. 
+```{r}
+aggregate(cbind(BMI, cigs.per.day) ~ smoker + gender,
+  data = tobacco,
+  mean
+)
+```
+

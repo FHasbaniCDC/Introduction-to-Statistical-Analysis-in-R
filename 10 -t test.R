@@ -44,3 +44,9 @@ t_stat
 
 pvalue = 2*pt(t_stat,df=n1+n2-2)
 pvalue
+
+temp=rbind(data.frame(x=smp2014,group=1),data.frame(x=smp2019,group=2))
+
+temp$group=as.factor(temp$group)
+leveneTest(temp$x,group=temp$group,center=mean)
+#Levene test: evaluates the equality of variances for a variable determined for two or more groups. Less sensitive to data deviations from normal distribution

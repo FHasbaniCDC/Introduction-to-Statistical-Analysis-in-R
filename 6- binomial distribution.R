@@ -73,5 +73,8 @@ pnorm(66,mean=65, sd=7)
 #2
 dbinom(8,size=10,prob=.6)
 
-pbinom(4,size=10,prob=.6) #95, 4, 3, 2, 1
-#dbinom(3-1,size=10,prob=.6) 5 #3, 2, 1
+#remember that is at least....(the below problem is not complete, answer is 95.5)
+
+pbinom( ,size=10,prob=.6) #***95.5 *4*,3,2,1
+
+

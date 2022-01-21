@@ -1,0 +1,135 @@
+---
+title: "13-anova"
+output: html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+#install.packages("multcomp")
+library(magrittr)
+library(dplyr)
+library(ggplot2)
+library(multcomp)
+```
+
+```{r}
+View(cholesterol)
+str(cholesterol)
+tail(cholesterol)
+```
+
+```{r}
+levels(cholesterol$trt) #multiple groups
+```
+
+```{r}
+df <- cholesterol %>%
+  group_by(trt) %>%
+  dplyr::summarise(count_treatment = n(), 
+   mean_rsp = mean(response, na.rm = TRUE),
+   sd_rsp = sd(response, na.rm = TRUE)
+)
+```
+
+```{r}
+ggplot(cholesterol, aes(x = trt, y = response, fill = trt)) +
+  geom_boxplot() +
+  geom_jitter(shape = 15,
+              color = c("#1b9e77"),
+  position = position_jitter()) +
+  theme_classic()
+```
+
+#syntax
+#y ~ X1+ X2+...+Xn # X1 +  X2 +... refers to the independent variables
+#y ~ . # use all the remaining variables as independent variables
+```{r}
+aov_model <- aov(response ~ trt)
+```
+
+#what is the average value of response?
+```{r}
+summary(aov_model)  #Print the summary of the test
+```
+
+#check for normality by analyzing the model results
+```{r}
+library(ggpubr)
+ggqqplot(residuals(aov_model))
+#if all the points fall approx. along the reference line, can assume normality
+```
+
+#Is The p-value lower than the usual threshold of 0.05?
+
+#compute Shapiro-Wilcoxon test for normality
+```{r}
+shapiro.test(residuals(aov_model))
+```
+
+```{r}
+cholesterol %>%
+   group_by(trt) %>%
+     rstatix::shapiro_test(response)
+#data is normally distributed, the p-value >0.05
+
+ggqqplot(cholesterol, "response", facet.by = "trt")
+
+plot(aov_model,1)
+```
+#no evident relationships between residuals and fitted values. Assume homogeneity of variances.
+
+#Pairwise comparison
+#Used to find means that are significantly different from each other. Test whether there is a strong chance that an observed numerical change in one value is causally related to an observed change in another value. Tukey test is a way to test an experimental hypothesis.
+
+```{r}
+TukeyHSD(aov_model) #to determine which group has a different mean
+```
+
+#Two way ANOVA 
+#y=x1 + x2 #quantitative variable and 2 categorical variables
+
+#anova_two_way <- aov(x1 + x2, data = df)
+#summary(anova_two_way)
+```{r}
+#install.packages("datarium")
+library(datarium)
+
+data(jobsatisfaction)
+```
+
+```{r}
+set.seed(812)
+jobsatisfaction %>% 
+  sample_n_by(gender, education_level, size = 1)
+
+jobsatisfaction %>%
+  group_by(gender, education_level) %>%
+  get_summary_stats(score, type = "mean_sd")
+
+df2 <- ggboxplot(jobsatisfaction, x = "gender", y = "score", color = "education_level", palette = "jco")
+df2
+
+jobsatisfaction %>%
+  group_by(gender, education_level) %>%
+  identify_outliers(score)
+
+res.aov <- jobsatisfaction %>% 
+  rstatix::anova_test(score ~ gender * education_level)
+res.aov
+```
+
+```{r}
+#install.packages("AICcmodavg")
+library(AICcmodavg)
+```
+
+#model.set <- list(one.way, two.way, interaction, blocking)
+#model.names <- c("one.way", "two.way", "interaction", "blocking")
+
+#aictab(model.set, modnames = model.names)
+
+#checking for homoscedasticity
+par(mfrow=c(2,2))
+plot(two.way)
+par(mfrow=c(1,1))
